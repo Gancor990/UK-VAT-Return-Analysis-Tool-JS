@@ -1,0 +1,196 @@
+<html>
+    <head>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+
+                document.querySelector('#submit').onclick = () => {
+
+                    // creates list with form info
+                    var list = Form_Capture()
+                    // creates class with list data
+                    const res = Sense_Check(list)
+
+                    var table = document.createElement('table');
+                    table.innerHTML =
+
+                        "<tr><td>"+"Total value of VATable sales: "+'</td><td class="td-data">'+ "£ " + res.Value_Sales_VAT().toFixed(2) +"</tr>"+
+                        "<tr><td>"+"Total value of non-VATable sales: "+'</td><td class="td-data">'+"£ " + res.Value_Sales_no_VAT().toFixed(2) +"</tr>"+
+                        "<tr><td>"+"% of sales with VAT: "+'</td><td class="td-data">'+ (res.Pc_Sales_VAT()*100).toFixed(2) +"%"+"</tr>"+     
+                        "<tr><td>"+"% of purchases with VAT: "+'</td><td class="td-data">'+ (res.Pc_Purchases_VAT()*100).toFixed(2) +"%"+"</tr>"+
+                        "<tr><td>"+"% of VAT on EC Acquisitions: "+'</td><td class="td-data">'+ res.Pc_VAT_Acqs().toFixed(2) +"</tr>"+
+                        "<tr><td>"+"Mark up: "+'</td><td class="td-data">'+ (res.Mark_Up()*100).toFixed(2) +"%"+"</tr>"+
+                        "<tr><td>"+"Tax performance ratio: "+'</td><td class="td-data">'+ res.Overall_TPR().toFixed(2) +"</tr>"+
+                        "<tr><td>"+"Tax performance ratio excluding EC Acquisitions: "+'</td><td class="td-data">'+ res.True_TPR_Exc_Acq_OT().toFixed(2) +"</tr>"+
+                        "<tr><td>"+"Tax due with EC Acquisitions tax excluded: "+'</td><td class="td-data">'+ res.Tax_Yield_Exc_Acq_OT().toFixed(2) +"</tr>"+
+                        "<tr><td>"+"Total outputs (sales) less inputs (purchases): "+'</td><td class="td-data">'+"£ "+ res.Ttl_OP_Less_IP().toFixed(2) +"</tr>"+
+                        "<tr><td>"+"Tax throughput: "+'</td><td class="td-data">'+"£ "+ res.Tax_Throughput().toFixed(2) +"</tr>"+
+                        "<tr><td>"+"Zero-rated sales not EC: "+'</td><td class="td-data">'+"£ "+ res.ZRated_OP_not_EC().toFixed(2) +"</td>"+
+                        "<tr><td>"+"Percentage of Zero Rated sales excluding EC supplies: "+'</td><td class="td-data">'+ res.Pc_ZRated_not_EC().toFixed(2) +"%"+"</tr>"+
+                        "<tr><td>"+"Percentage of sales to the EC: "+'</td><td class="td-data">'+ (res.Pc_Sales_EC()*100).toFixed(2) +"%"+"</tr>"; 
+
+                    document.querySelector('#results').append(table);
+
+                    return false;
+                } 
+            });
+
+            class analysis {
+                constructor(data) {
+                    this.data = data;
+                }
+                Value_Sales_VAT() {
+                    return this.data[0] / 0.2;
+                }
+
+                Value_Sales_no_VAT() {
+                    return this.data[5] - (this.data[2] / 0.2);
+                }
+    
+                Pc_Sales_VAT() {
+                    return (this.data[0] / 0.2) / this.data[5];
+                }
+    
+                Pc_Purchases_VAT() {
+                    return Number((this.data[3] / 0.2) / this.data[6]);
+                }
+
+                Pc_VAT_Acqs() {
+                    return this.data[1] / this.data[8]
+                }
+
+                Mark_Up() {
+                    return (this.data[5] - this.data[6]) / this.data[6];
+                }
+      
+                Overall_TPR() {
+                    return (this.data[2] - this.data[3]) / this.data[3];
+                }       
+
+                True_TPR_Exc_Acq_OT() {
+                    return (this.data[0] - this.data[3]) / this.data[3];
+                }
+
+                Tax_Yield_Exc_Acq_OT() {
+                    return this.data[8] - this.data[1];
+                }
+
+                Ttl_OP_Less_IP() {
+                    return this.data[5] - this.data[6];
+                }
+
+                Tax_Throughput() {
+                    return this.data[2] + this.data[3];
+                }
+
+                ZRated_OP_not_EC() {
+                    return (((this.data[5] - (this.data[2]) / 0.2)) - this.data[7]);
+                }
+
+                Pc_ZRated_not_EC() {
+                    return (((this.data[5] - (this.data[2]) / 0.2)) - this.data[7]) / this.data[5];
+                }
+                Pc_Sales_EC() {
+                    return this.data[7] / this.data[5];
+                }
+            }
+
+            function Form_Capture() {
+
+                const box1 = Number(document.querySelector('#box1').value);
+                const box2 = Number(document.querySelector('#box2').value); 
+                const box3 = Number(document.querySelector('#box3').value);
+                const box4 = Number(document.querySelector('#box4').value);
+                const box5 = Number(document.querySelector('#box5').value);
+                const box6 = Number(document.querySelector('#box6').value);
+                const box7 = Number(document.querySelector('#box7').value);
+                const box8 = Number(document.querySelector('#box8').value);
+                const box9 = Number(document.querySelector('#box9').value);
+
+                var list = [box1, box2, box3, box4, box5, box6, box7, box8, box9]
+
+                return list;
+            }
+
+            function Sense_Check(data) {
+                const res = new analysis(data)
+
+                return res
+            }
+        </script>
+        
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet"> 
+    </head>
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+            padding-top: 20px;
+            padding-bottom: 20px;
+            background-color: honeydew;
+        }
+        h1 {
+            padding-top: 25px;
+        }
+        #submit {
+            background-color: red;
+            border-radius: 20px;
+            text-shadow: none;
+            border: none;
+            width: 100px;
+            height: 30px;
+            margin-top: 10px;
+        }
+        .inputsection {
+            width: 800px;
+            text-align: center;
+            margin: 0 auto;
+            background-color: honeydew;
+            height: 450px;
+        }
+        .outputsection {
+            width: 800px;
+            text-align: center;
+            margin: 0 auto;
+            background-color: honeydew;
+            height: 420px;
+            padding-top: 30px;
+        }
+        table {
+            text-align: left;
+        }
+        td {
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+        .td-data {
+            text-align: left;
+        }
+        .boxes-txt {
+            padding-right: 20px;
+        }
+        .fa-archive {
+            color: Gainsboro;
+            margin-right: 20px;
+        }
+
+    </style>
+    <body>
+        <div class="inputsection">
+            <h1><i class="fas fa-calculator"></i> VAT Checker</h1>
+            <form id="form">
+                <i class="fas fa-archive"></i></i><a class="boxes-txt">Box 1</a><input id="box1" type="text"><br>
+                <i class="fas fa-archive"></i><a class="boxes-txt">Box 2</a><input id="box2" type="text"><br>
+                <i class="fas fa-archive"></i><a class="boxes-txt">Box 3</a><input id="box3" type="text"><br>
+                <i class="fas fa-archive"></i><a class="boxes-txt">Box 4</a><input id="box4" type="text"><br>
+                <i class="fas fa-archive"></i><a class="boxes-txt">Box 5</a><input id="box5" type="text"><br>
+                <i class="fas fa-archive"></i><a class="boxes-txt">Box 6</a><input id="box6" type="text"><br>
+                <i class="fas fa-archive"></i><a class="boxes-txt">Box 7</a><input id="box7" type="text"><br>
+                <i class="fas fa-archive"></i><a class="boxes-txt">Box 8</a><input id="box8" type="text"><br>
+                <i class="fas fa-archive"></i><a class="boxes-txt">Box 9</a><input id="box9" type="text"><br>
+                <button type="button" id="submit">Submit</button>
+            </form>
+        </div>
+        <div class="outputsection" id="results">
+        </div>
+    </body>
+</html>

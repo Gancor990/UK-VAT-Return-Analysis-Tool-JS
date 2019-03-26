@@ -4,6 +4,8 @@
             document.addEventListener('DOMContentLoaded', () => {
 
                 document.querySelector('#submit').onclick = () => {
+                    
+                    document.querySelector('#results').innerHTML = "";
 
                     // creates list with form info
                     var list = Form_Capture()
@@ -11,22 +13,23 @@
                     const res = Sense_Check(list)
 
                     var table = document.createElement('table');
+
                     table.innerHTML =
 
-                        "<tr><td>"+"Total value of VATable sales: "+'</td><td class="td-data">'+ "£ " + res.Value_Sales_VAT().toFixed(2) +"</tr>"+
-                        "<tr><td>"+"Total value of non-VATable sales: "+'</td><td class="td-data">'+"£ " + res.Value_Sales_no_VAT().toFixed(2) +"</tr>"+
-                        "<tr><td>"+"% of sales with VAT: "+'</td><td class="td-data">'+ (res.Pc_Sales_VAT()*100).toFixed(2) +"%"+"</tr>"+     
-                        "<tr><td>"+"% of purchases with VAT: "+'</td><td class="td-data">'+ (res.Pc_Purchases_VAT()*100).toFixed(2) +"%"+"</tr>"+
-                        "<tr><td>"+"% of VAT on EC Acquisitions: "+'</td><td class="td-data">'+ res.Pc_VAT_Acqs().toFixed(2) +"</tr>"+
-                        "<tr><td>"+"Mark up: "+'</td><td class="td-data">'+ (res.Mark_Up()*100).toFixed(2) +"%"+"</tr>"+
-                        "<tr><td>"+"Tax performance ratio: "+'</td><td class="td-data">'+ res.Overall_TPR().toFixed(2) +"</tr>"+
-                        "<tr><td>"+"Tax performance ratio excluding EC Acquisitions: "+'</td><td class="td-data">'+ res.True_TPR_Exc_Acq_OT().toFixed(2) +"</tr>"+
-                        "<tr><td>"+"Tax due with EC Acquisitions tax excluded: "+'</td><td class="td-data">'+ res.Tax_Yield_Exc_Acq_OT().toFixed(2) +"</tr>"+
-                        "<tr><td>"+"Total outputs (sales) less inputs (purchases): "+'</td><td class="td-data">'+"£ "+ res.Ttl_OP_Less_IP().toFixed(2) +"</tr>"+
-                        "<tr><td>"+"Tax throughput: "+'</td><td class="td-data">'+"£ "+ res.Tax_Throughput().toFixed(2) +"</tr>"+
-                        "<tr><td>"+"Zero-rated sales not EC: "+'</td><td class="td-data">'+"£ "+ res.ZRated_OP_not_EC().toFixed(2) +"</td>"+
-                        "<tr><td>"+"Percentage of Zero Rated sales excluding EC supplies: "+'</td><td class="td-data">'+ res.Pc_ZRated_not_EC().toFixed(2) +"%"+"</tr>"+
-                        "<tr><td>"+"Percentage of sales to the EC: "+'</td><td class="td-data">'+ (res.Pc_Sales_EC()*100).toFixed(2) +"%"+"</tr>"; 
+                        "<tr><td>"+"Total value of VATable sales: "+'</td><td id="td-data">'+ "£ " + Comma_Delim(res.Value_Sales_VAT()) +"</tr>"+
+                        "<tr><td>"+"Total value of non-VATable sales: "+'</td><td id="td-data">'+"£ " + Comma_Delim(res.Value_Sales_no_VAT()) +"</tr>"+
+                        "<tr><td>"+"% of sales with VAT: "+'</td><td id="td-data">'+ (res.Pc_Sales_VAT()*100).toFixed(2) +" %"+"</tr>"+     
+                        "<tr><td>"+"% of purchases with VAT: "+'</td><td id="td-data">'+ (res.Pc_Purchases_VAT()*100).toFixed(2) +" %"+"</tr>"+
+                        "<tr><td>"+"% of VAT on EC Acquisitions: "+'</td><td id="td-data">'+ res.Pc_VAT_Acqs().toFixed(2) +"</tr>"+
+                        "<tr><td>"+"Mark up: "+'</td><td id="td-data">'+ (res.Mark_Up()*100).toFixed(2) +" %"+"</tr>"+
+                        "<tr><td>"+"Tax performance ratio: "+'</td><td id="td-data">'+ res.Overall_TPR().toFixed(2) +"</tr>"+
+                        "<tr><td>"+"Tax performance ratio excluding EC Acquisitions: "+'</td><td id="td-data">'+ res.True_TPR_Exc_Acq_OT().toFixed(2) +"</tr>"+
+                        "<tr><td>"+"Tax due with EC Acquisitions tax excluded: "+'</td><td id="td-data">'+"£ " + Comma_Delim(res.Tax_Yield_Exc_Acq_OT()) +"</tr>"+
+                        "<tr><td>"+"Total outputs (sales) less inputs (purchases): "+'</td><td id="td-data">'+"£ "+ Comma_Delim(res.Ttl_OP_Less_IP()) +"</tr>"+
+                        "<tr><td>"+"Tax throughput: "+'</td><td id="td-data">'+"£ "+ Comma_Delim(res.Tax_Throughput()) +"</tr>"+
+                        "<tr><td>"+"Zero-rated sales not EC: "+'</td><td id="td-data">'+"£ "+ Comma_Delim(res.ZRated_OP_not_EC()) +"</td>"+
+                        "<tr><td>"+"Percentage of Zero Rated sales excluding EC supplies: "+'</td><td id="td-data">'+ res.Pc_ZRated_not_EC().toFixed(2) +" %"+"</tr>"+
+                        "<tr><td>"+"Percentage of sales to the EC: "+'</td><td id="td-data">'+ (res.Pc_Sales_EC()*100).toFixed(2) +" %"+"</tr>"; 
 
                     document.querySelector('#results').append(table);
 
@@ -116,9 +119,14 @@
 
                 return res
             }
+
+            function Comma_Delim(number) {
+                var return_number = Number(number.toFixed(2));
+                return return_number.toLocaleString('en-US', {minimumFractionDigits: 2});
+            }
         </script>
-        
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
         <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet"> 
     </head>
     <style>
@@ -129,68 +137,94 @@
             background-color: honeydew;
         }
         h1 {
-            padding-top: 25px;
+            padding-top: 15px;
+            color: #97c4bc;
         }
         #submit {
-            background-color: red;
+            background-color: #97c4bc;
+            color: black;
             border-radius: 20px;
             text-shadow: none;
             border: none;
             width: 100px;
             height: 30px;
-            margin-top: 10px;
+            margin-top: 15px;
+        }
+        #submit:hover{
+            background-color: darkcyan;
         }
         .inputsection {
-            width: 800px;
+            width: 420px;
             text-align: center;
-            margin: 0 auto;
-            background-color: honeydew;
-            height: 450px;
+            /*margin: 0 auto;*/
+            margin-left: 30px;
+            background-color: #1d263b;
+            float: left;
+            height: 390px;
+            padding-right: 20px;
+            
+            -webkit-box-shadow: 2px 3px 20px -6px rgba(0,0,0,0.75);
+            -moz-box-shadow: 2px 3px 20px -6px rgba(0,0,0,0.75);
+            box-shadow: 2px 3px 20px -6px rgba(0,0,0,0.75);
         }
         .outputsection {
-            width: 800px;
+            width: 600px;
             text-align: center;
-            margin: 0 auto;
+            float: left;
             background-color: honeydew;
             height: 420px;
-            padding-top: 30px;
+            margin-top: 0;
+            margin-left: 30px;
+            -webkit-box-shadow: 2px 3px 20px -6px rgba(0,0,0,0.75);
+            -moz-box-shadow: 2px 3px 20px -6px rgba(0,0,0,0.75);
+            box-shadow: 2px 3px 20px -6px rgba(0,0,0,0.75);
         }
         table {
             text-align: left;
+            width: 100%;
+            font-size: 11px;
         }
         td {
             padding-left: 20px;
             padding-right: 20px;
         }
-        .td-data {
-            text-align: left;
+        #td-data {
+            text-align: center;
         }
         .boxes-txt {
             padding-right: 20px;
         }
         .fa-archive {
             color: Gainsboro;
-            margin-right: 20px;
+            padding-right: 20px;
         }
-
+        .boxes-txt {
+            color: #97c4bc;
+            font-size: 16px;
+        }
+        @media only screen and (max-width: 1100px) {
+            .outputsection {
+                margin-top: 20px;
+            }
+        }
     </style>
     <body>
         <div class="inputsection">
             <h1><i class="fas fa-calculator"></i> VAT Checker</h1>
             <form id="form">
-                <i class="fas fa-archive"></i></i><a class="boxes-txt">Box 1</a><input id="box1" type="text"><br>
-                <i class="fas fa-archive"></i><a class="boxes-txt">Box 2</a><input id="box2" type="text"><br>
-                <i class="fas fa-archive"></i><a class="boxes-txt">Box 3</a><input id="box3" type="text"><br>
-                <i class="fas fa-archive"></i><a class="boxes-txt">Box 4</a><input id="box4" type="text"><br>
-                <i class="fas fa-archive"></i><a class="boxes-txt">Box 5</a><input id="box5" type="text"><br>
-                <i class="fas fa-archive"></i><a class="boxes-txt">Box 6</a><input id="box6" type="text"><br>
-                <i class="fas fa-archive"></i><a class="boxes-txt">Box 7</a><input id="box7" type="text"><br>
-                <i class="fas fa-archive"></i><a class="boxes-txt">Box 8</a><input id="box8" type="text"><br>
-                <i class="fas fa-archive"></i><a class="boxes-txt">Box 9</a><input id="box9" type="text"><br>
+                <i class="fas fa-archive"></i></i><a class="boxes-txt">Box 1</a><input class="w3-border" id="box1" type="text" style=text-align:right;""><br>
+                <i class="fas fa-archive"></i><a class="boxes-txt">Box 2</a><input class="w3-border" id="box2" type="text" style=text-align:right;><br>
+                <i class="fas fa-archive"></i><a class="boxes-txt">Box 3</a><input class="w3-border" id="box3" type="text" style=text-align:right;><br>
+                <i class="fas fa-archive"></i><a class="boxes-txt">Box 4</a><input class="w3-border" id="box4" type="text" style=text-align:right;><br>
+                <i class="fas fa-archive"></i><a class="boxes-txt">Box 5</a><input class="w3-border" id="box5" type="text" style=text-align:right;><br>
+                <i class="fas fa-archive"></i><a class="boxes-txt">Box 6</a><input class="w3-border" id="box6" type="text" style=text-align:right;><br>
+                <i class="fas fa-archive"></i><a class="boxes-txt">Box 7</a><input class="w3-border" id="box7" type="text" style=text-align:right;><br>
+                <i class="fas fa-archive"></i><a class="boxes-txt">Box 8</a><input class="w3-border" id="box8" type="text" style=text-align:right;><br>
+                <i class="fas fa-archive"></i><a class="boxes-txt">Box 9</a><input class="w3-border" id="box9" type="text" style=text-align:right;><br>
                 <button type="button" id="submit">Submit</button>
             </form>
         </div>
-        <div class="outputsection" id="results">
+        <div class="outputsection w3-table-all" id="results">
         </div>
     </body>
 </html>
